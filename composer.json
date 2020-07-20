@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "michelf/php-markdown": "^1.9"
+    }
+}
