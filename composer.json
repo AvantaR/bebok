@@ -1,5 +1,13 @@
 {
     "require-dev": {
-        "michelf/php-markdown": "^1.9"
+        "erusev/parsedown": "^1.7",
+        "consolidation/robo": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {"Bebok\\": "src/Bebok"}
+    },
+    "require": {
+        "hassankhan/config": "^2.1",
+        "twig/twig": "^3.0"
     }
 }
