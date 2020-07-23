@@ -7,7 +7,6 @@
         "name": "Krzysztof Szala",
         "email": "avantar@gmail.com"
     }],
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": { "Bebok\\": "src/Bebok" }
     },
