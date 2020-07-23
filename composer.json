@@ -7,6 +7,7 @@
         "name": "Krzysztof Szala",
         "email": "avantar@gmail.com"
     }],
+    "minimum-stability": "dev",   
     "require-dev": {
         "erusev/parsedown": "^1.7",
         "consolidation/robo": "^2.1"
