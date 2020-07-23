@@ -8,7 +8,7 @@ use Bebok\Parsers\MarkdownParser;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 // Setting default parser
 $parser = new MarkdownParser();
