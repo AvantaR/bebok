@@ -6,7 +6,7 @@ use Parsedown;
 
 class MarkdownParser implements Parser
 {
-    public const VALID_EXTENSIONS = ['md', 'markdown'];
+    public const VALID_EXTENSIONS = ['*.md', '*.markdown'];
 
     private Parsedown $parser;
 

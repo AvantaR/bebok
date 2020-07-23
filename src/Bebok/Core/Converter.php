@@ -3,41 +3,67 @@
 namespace Bebok\Core;
 
 use Bebok\Parsers\Parser;
-use Parsedown;
 use Bebok\Core\Template;
-use Twig\Loader\FilesystemLoader;
+use SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 class Converter
 {
+    private Finder $finder;
+    private Filesystem $filesystem;
     private Parser $parser;
     private Template $template;
+    private array $links = [];
 
-    public function __construct(Parser $parser, Template $template)
-    {
+    public function __construct(
+        Finder $finder,
+        Filesystem $filesystem,
+        Parser $parser,
+        Template $template
+    ) {
+        $this->finder = $finder;
+        $this->filesystem = $filesystem;
         $this->parser = $parser;
         $this->template = $template;
     }
 
     public function run(): void
     {
-        $links = [];
-        $links[] = '<ul>';
-        $files = scandir('input');
+        $files = $this->getInputFiles();
+
         foreach ($files as $file) {
-            $fileInfo = pathinfo($file);
-            if (in_array($fileInfo['extension'], $this->parser::VALID_EXTENSIONS)) {
-                $file = file_get_contents('input/' . $file);
-
-                $html = $this->parser->toHtml($file);
-
-                file_put_contents("output/{$fileInfo['filename']}.html", $this->template->render($html));
-
-                $links[] = '<li><a href="/' . $fileInfo['filename'] . '.html">' . $fileInfo['filename'] . '</a></li>';
-            }
+            $this->generateOutputFile($file);
+            $this->appendLink($file);
         }
 
-        $links[] = '</ul>';
+        $this->generateIndex();
+    }
 
-        file_put_contents('output/index.html', $links);
+    private function generateOutputFile($file): void
+    {
+        $fileContent = $file->getContents();
+        $html = $this->parser->toHtml($fileContent);
+        $this->filesystem->dumpFile("output/{$file->getRelativePath()}/{$file->getBasename(".{$file->getExtension()}")}.html", $this->template->render($html));
+    }
+
+    private function getInputFiles(): Finder
+    {
+        return $this->finder->files()->in('input')->name($this->parser::VALID_EXTENSIONS);
+    }
+
+    private function appendLink(SplFileInfo $file): void
+    {
+        $this->links[] = '<li><a href="/' . $this->getRelativePath($file) . $file->getBasename('.' . $file->getExtension()) . '.html">' . ucfirst($file->getBasename(".{$file->getExtension()}")) . '</a></li>';
+    }
+
+    private function getRelativePath($file): ?string
+    {
+        return $file->getRelativePath() ? $file->getRelativePath() . '/' :  null;
+    }
+
+    private function generateIndex(): void
+    {
+        $this->filesystem->dumpFile('output/index.html', $this->template->render(implode('', $this->links)));
     }
 }
