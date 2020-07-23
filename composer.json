@@ -1,10 +1,18 @@
 {
+    "name": "avantar/bebok",
+    "description": "Bebok Static Site Generator",
+    "type": "project",
+    "license": "MIT",
+    "authors": [{
+        "name": "Krzysztof Szala",
+        "email": "avantar@gmail.com"
+    }],
     "require-dev": {
         "erusev/parsedown": "^1.7",
         "consolidation/robo": "^2.1"
     },
     "autoload": {
-        "psr-4": {"Bebok\\": "src/Bebok"}
+        "psr-4": { "Bebok\\": "src/Bebok" }
     },
     "require": {
         "hassankhan/config": "^2.1",
