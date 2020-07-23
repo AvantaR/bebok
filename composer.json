@@ -7,16 +7,14 @@
         "name": "Krzysztof Szala",
         "email": "avantar@gmail.com"
     }],
-    "minimum-stability": "dev",   
-    "require-dev": {
-        "erusev/parsedown": "^1.7",
-        "consolidation/robo": "^2.1"
-    },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": { "Bebok\\": "src/Bebok" }
     },
     "require": {
         "hassankhan/config": "^2.1",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "erusev/parsedown": "^1.7",
+        "consolidation/robo": "^2.1"
     }
 }
