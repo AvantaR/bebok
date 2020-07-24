@@ -11,11 +11,14 @@
         "psr-4": { "Bebok\\": "src/Bebok" }
     },
     "require": {
+        "php": ">=7.4",
         "hassankhan/config": "^2.1",
         "twig/twig": "^3.0",
         "erusev/parsedown": "^1.7",
         "consolidation/robo": "^2.1",
         "symfony/finder": "^5.1",
-        "symfony/filesystem": "^5.1"
+        "symfony/filesystem": "^5.1",
+        "netcarver/textile": "^3.7",
+        "symfony/console": "^5.1"
     }
 }
