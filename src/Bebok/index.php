@@ -4,6 +4,7 @@ namespace Bebok;
 
 use Bebok\Commands\BuildCommand;
 use Bebok\Core\Converter;
+use Bebok\Core\Generator;
 use Bebok\Core\Template;
 use Bebok\Parsers\MarkdownParser;
 use Mni\FrontYAML\Parser as FrontMatter;
@@ -17,6 +18,7 @@ require 'vendor/autoload.php';
 
 $finder = new Finder();
 $filesystem = new Filesystem();
+$generator = new Generator($filesystem);
 $frontMatter = new FrontMatter();
 // Setting up default parser
 $parser = new MarkdownParser();
@@ -27,7 +29,7 @@ $twig = new Twig($twigLoader);
 $template = new Template($twig);
 
 // Setting up converter
-$converter = new Converter($finder, $filesystem, $parser, $frontMatter, $template);
+$converter = new Converter($finder, $generator, $parser, $frontMatter, $template);
 
 $app = new Application();
 $app->add(new BuildCommand($converter));

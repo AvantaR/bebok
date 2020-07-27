@@ -3,15 +3,14 @@
 namespace Bebok\Core;
 
 use Bebok\Parsers\Parser;
-use Bebok\Core\Template;
 use SplFileInfo;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Mni\FrontYAML\Parser as FrontMatter;
+
 class Converter
 {
     private Finder $finder;
-    private Filesystem $filesystem;
+    private Generator $generator;
     private Parser $parser;
     private FrontMatter $frontMatter;
     private Template $template;
@@ -19,13 +18,13 @@ class Converter
 
     public function __construct(
         Finder $finder,
-        Filesystem $filesystem,
+        Generator $generator,
         Parser $parser,
         FrontMatter $frontMatter,
         Template $template
     ) {
         $this->finder = $finder;
-        $this->filesystem = $filesystem;
+        $this->generator = $generator;
         $this->parser = $parser;
         $this->frontMatter = $frontMatter;
         $this->template = $template;
@@ -51,7 +50,7 @@ class Converter
         $html = $this->parser->toHtml($document->getContent());
         $template = $this->template->render(array_merge(['content' => $html], $yaml));
 
-        $this->filesystem->dumpFile("output/{$file->getRelativePath()}/{$file->getBasename(".{$file->getExtension()}")}.html", $template);
+        $this->generator->generateOutputFile(new OutputFile($file, $template));
     }
 
     private function getInputFiles(): Finder
@@ -66,11 +65,19 @@ class Converter
 
     private function getRelativePath($file): ?string
     {
-        return $file->getRelativePath() ? $file->getRelativePath() . '/' :  null;
+        return $file->getRelativePath() ? $file->getRelativePath() . '/' : null;
     }
 
     private function generateIndex(): void
     {
-        $this->filesystem->dumpFile('output/index.html', $this->template->render(['content' => implode('', $this->links)]));
+        $data = [
+            'title' => 'Test',
+            'content' => '
+                <h1>Welcome</h1>
+                <ul>' . implode('', $this->links) . '</ul>
+                '
+        ];
+        $template = $this->template->render($data);
+        $this->generator->generateOutputIndex($template);
     }
 }
