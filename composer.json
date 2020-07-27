@@ -19,6 +19,7 @@
         "symfony/finder": "^5.1",
         "symfony/filesystem": "^5.1",
         "netcarver/textile": "^3.7",
-        "symfony/console": "^5.1"
+        "symfony/console": "^5.1",
+        "mnapoli/front-yaml": "^1.7"
     }
 }

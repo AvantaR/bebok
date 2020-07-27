@@ -1,3 +1,7 @@
+---
+title: PHP good practices
+created_at: 05-07-2020 20:30:00
+---
 # Code style – PHP
 
 ## Access modifiers

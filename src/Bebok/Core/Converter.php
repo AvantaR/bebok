@@ -7,12 +7,13 @@ use Bebok\Core\Template;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-
+use Mni\FrontYAML\Parser as FrontMatter;
 class Converter
 {
     private Finder $finder;
     private Filesystem $filesystem;
     private Parser $parser;
+    private FrontMatter $frontMatter;
     private Template $template;
     private array $links = [];
 
@@ -20,11 +21,13 @@ class Converter
         Finder $finder,
         Filesystem $filesystem,
         Parser $parser,
+        FrontMatter $frontMatter,
         Template $template
     ) {
         $this->finder = $finder;
         $this->filesystem = $filesystem;
         $this->parser = $parser;
+        $this->frontMatter = $frontMatter;
         $this->template = $template;
     }
 
@@ -43,8 +46,12 @@ class Converter
     private function generateOutputFile($file): void
     {
         $fileContent = $file->getContents();
-        $html = $this->parser->toHtml($fileContent);
-        $this->filesystem->dumpFile("output/{$file->getRelativePath()}/{$file->getBasename(".{$file->getExtension()}")}.html", $this->template->render($html));
+        $document = $this->frontMatter->parse($fileContent, false);
+        $yaml = $document->getYAML() ?? [];
+        $html = $this->parser->toHtml($document->getContent());
+        $template = $this->template->render(array_merge(['content' => $html], $yaml));
+
+        $this->filesystem->dumpFile("output/{$file->getRelativePath()}/{$file->getBasename(".{$file->getExtension()}")}.html", $template);
     }
 
     private function getInputFiles(): Finder
@@ -64,6 +71,6 @@ class Converter
 
     private function generateIndex(): void
     {
-        $this->filesystem->dumpFile('output/index.html', $this->template->render(implode('', $this->links)));
+        $this->filesystem->dumpFile('output/index.html', $this->template->render(['content' => implode('', $this->links)]));
     }
 }

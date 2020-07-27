@@ -22,8 +22,8 @@ class Template
         $this->template = $this->twig->load($name);
     }
 
-    public function render(string $content): string
+    public function render(array $data): string
     {
-        return $this->template->render(['content' => $content]);
+        return $this->template->render($data);
     }
 }
